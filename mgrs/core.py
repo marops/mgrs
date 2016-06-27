@@ -94,6 +94,27 @@ rt.Convert_Geodetic_To_MGRS.argtypes = [ctypes.c_double, ctypes.c_double, ctypes
 rt.Convert_Geodetic_To_MGRS.restype = ctypes.c_long
 rt.Convert_Geodetic_To_MGRS.errcheck = check_error
 
+
+#   Convert Geodetic to UTM
+#/*
+# * The function Convert_Geodetic_To_UTM converts geodetic (latitude and
+# * longitude) coordinates to UTM projection (zone, hemisphere, easting and
+# * northing) coordinates according to the current ellipsoid and UTM zone
+# * override parameters.  If any errors occur, the error code(s) are returned
+# * by the function, otherwise UTM_NO_ERROR is returned.
+# *
+# *    Latitude          : Latitude in radians                 (input)
+# *    Longitude         : Longitude in radians                (input)
+# *    Zone              : UTM zone                            (output)
+# *    Hemisphere        : North or South hemisphere           (output)
+# *    Easting           : Easting (X) in meters               (output)
+# *    Northing          : Northing (Y) in meters              (output)
+# */
+rt.Convert_Geodetic_To_UTM.argtypes = [ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_long), ctypes.POINTER(ctypes.c_char), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
+rt.Convert_Geodetic_To_UTM.restype = ctypes.c_long
+rt.Convert_Geodetic_To_UTM.errcheck = check_error
+
+
 #
 # /*
 #  * This function converts an MGRS coordinate string to Geodetic (latitude
@@ -110,6 +131,13 @@ rt.Convert_Geodetic_To_MGRS.errcheck = check_error
 rt.Convert_MGRS_To_Geodetic.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
 rt.Convert_MGRS_To_Geodetic.restype = ctypes.c_long
 rt.Convert_MGRS_To_Geodetic.errcheck = check_error
+
+
+# Convert UTM to Geodetic
+
+rt.Convert_UTM_To_Geodetic.argtypes = [ctypes.c_long, ctypes.c_char, ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
+rt.Convert_UTM_To_Geodetic.restype = ctypes.c_long
+rt.Convert_UTM_To_Geodetic.errcheck = check_error
 
 
 # /*

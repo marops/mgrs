@@ -91,6 +91,23 @@ class MGRS:
         core.rt.Convert_Geodetic_To_MGRS( lat, lon, MGRSPrecision, p)
         return ctypes.string_at(p)
 
+    def toUTM(self, latitude, longitude, inDegrees=True):
+        if inDegrees:
+            lat = core.TO_RADIANS(latitude)
+            lon = core.TO_RADIANS(longitude)
+        else:
+            lat = latitude
+            lon = longitude
+
+	zone       = ctypes.pointer(ctypes.c_long())
+        hemisphere = ctypes.pointer(ctypes.c_char())
+        easting    = ctypes.pointer(ctypes.c_double())
+        northing   = ctypes.pointer(ctypes.c_double())
+ 
+        core.rt.Convert_Geodetic_To_UTM( lat, lon, zone, hemisphere, easting, northing)
+        return zone.contents.value, hemisphere.contents.value, easting.contents.value, northing.contents.value
+
+
     def toLatLon(self, MGRS, inDegrees=True):
         plat = ctypes.pointer(ctypes.c_double())
         plon = ctypes.pointer(ctypes.c_double())
@@ -103,6 +120,20 @@ class MGRS:
             lat = plat.contents.value
             lon = plon.contents.value
         return (lat, lon)
+
+
+    def toLatLonFromUTM(self, zone, hemisphere, easting, northing, inDegrees=True):
+        plat = ctypes.pointer(ctypes.c_double())
+        plon = ctypes.pointer(ctypes.c_double())
+ 	core.rt.Convert_UTM_To_Geodetic( zone, hemisphere, easting, northing, plat, plon)
+        if inDegrees:
+            lat = core.TO_DEGREES(plat.contents.value)
+            lon = core.TO_DEGREES(plon.contents.value)
+        else:
+            lat = plat.contents.value
+            lon = plon.contents.value
+        return (lat, lon)
+
 
     def MGRSToUTM (self, MGRS) :
         mgrs       = ctypes.string_at(MGRS)
